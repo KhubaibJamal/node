@@ -22,8 +22,7 @@ app.get('/profile/:username', (req, res) => {
     res.send(`welcome, ${req.params.username}`);
 })
 
-
-
+// port listening
 app.listen('5000', () => {
     console.log("http://localhost:5000");
 })
