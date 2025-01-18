@@ -29,7 +29,10 @@
                         <h1 class="text-white text-2xl tracking-tighter">
                             <%= file %>
                         </h1>
-                        <a class="text-blue-500 inline-block mt-3" href="">Read More</a>
+                        <div class="flex w-full justify-between items-center mt-3">
+                            <a class="text-blue-500 inline-block" href="/file/<%= file %>">Read More</a>
+                            <a class="text-white" href="/edit/<%= file %>">edit name</a>
+                        </div>
                     </div>
 
                     <% }) %>

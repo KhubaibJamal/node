@@ -22,6 +22,22 @@ app.post('/create', (req, res) => {
 })
 
 
+app.get('/file/:filename', (req, res) => {
+    fs.readFile(`./files/${req.params.filename}`, 'utf-8', (error, filedata) => {
+        res.render('show', { filename: req.params.filename, filedata: filedata });
+    });
+
+})
+app.get('/edit/:filename', (req, res) => {
+    res.render('edit', { filename: req.params.filename });
+})
+app.post('/edit', (req, res) => {
+    fs.rename(`./files/${req.body.previous}`, `./files/${req.body.new}.txt`, (error) => {
+        res.redirect('/');
+        console.log("Error: " + error);
+    });
+})
+
 // port listening
 app.listen('5000', () => {
     console.log("http://localhost:5000");
