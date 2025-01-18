@@ -1,5 +1,5 @@
 {
-  "name": "6-ejs",
+  "name": "7-practice",
   "version": "1.0.0",
   "main": "app.js",
   "scripts": {
@@ -10,7 +10,6 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "cookie-parser": "^1.4.7",
     "ejs": "^3.1.10",
     "express": "^4.21.2"
   }
