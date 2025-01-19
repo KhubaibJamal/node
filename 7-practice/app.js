@@ -15,6 +15,7 @@ app.get('/', (req, res) => {
     });
 })
 
+// create files
 app.post('/create', (req, res) => {
     fs.writeFile(`./files/${req.body.title.split(' ').join('')}.txt`, req.body.description, (error) => {
         res.redirect('/');
@@ -30,6 +31,8 @@ app.get('/file/:filename', (req, res) => {
 app.get('/edit/:filename', (req, res) => {
     res.render('edit', { filename: req.params.filename });
 })
+
+// edit file title
 app.post('/edit', (req, res) => {
     fs.rename(`./files/${req.body.previous}`, `./files/${req.body.new}.txt`, (error) => {
         res.redirect('/');
@@ -39,6 +42,15 @@ app.post('/edit', (req, res) => {
     });
 })
 
+// delete files
+app.get('/delete/:filename', (req, res) => {
+    fs.unlink(`./files/${req.params.filename}`, (error) => {
+        res.redirect('/');
+        if (error) {
+            console.log("Error: " + error);
+        }
+    });
+})
 // port listening
 app.listen('5000', () => {
     console.log("http://localhost:5000");
