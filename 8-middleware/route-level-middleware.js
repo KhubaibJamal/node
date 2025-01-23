@@ -1,14 +1,12 @@
 const express = require('express');
-const { reqFilter } = require('./middleware');
+const reqFilter = require('./middleware');
 const app = express();
 const port = 5000;
-
-app.use(reqFilter);
 
 app.get('/', (req, res) => {
     res.send("Welcome");
 });
-app.get('/user', (req, res) => {
+app.get('/user', reqFilter, (req, res) => {
     res.send("welcome user");
 });
 
