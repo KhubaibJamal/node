@@ -18,7 +18,7 @@ app.get('/contact-us', (req, res) => {
 
 
 
-app.listen(port);
+app.listen(port, () => console.log(`Server is running on port ${port}`));
 
 // http://localhost:5000/?name=khubaib
 // http://localhost:5000/about/?age=44
