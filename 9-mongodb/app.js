@@ -2,6 +2,11 @@ const express = require('express');
 const app = express();
 const port = 5000;
 const userModel = require('./usermodel');
+const connectDB = require('./db');
+
+
+
+connectDB();
 
 app.get('/', (req, res) => {
     res.send("hey");
@@ -14,6 +19,18 @@ app.get('/create', async (req, res) => {
         name: 'john',
         email: 'wick@gmail.com',
         username: 'wickJ',
+        comments: [
+            { body: 'This is a comment', date: new Date() },
+            { body: 'This is a comment2', date: new Date() }
+        ],
+        data: {
+            active: true,
+            typeValue: "test",
+        },
+        cuisines: [
+            "1",
+            "2",
+        ]
     });
 
     res.send(createdUser);
