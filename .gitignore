@@ -5,5 +5,6 @@
 8-middleware/node_modules/
 9-mongodb/node_modules/
 10-mongo-crud/node_modules/
+10-mongo-crud/.env
 # Nodejs-BoilerPlate/node_modules/
 Nodejs-BoilerPlate/ 
