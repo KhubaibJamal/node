@@ -3,98 +3,111 @@ const express = require("express");
 const app = express();
 const connectDb = require('./config/db');
 const productModel = require('./models/products-model');
+
 const PORT = process.env.PORT || 5000;
+
+// Middleware to parse JSON
+app.use(express.json());
+
 // Connect to MongoDB
 connectDb();
 
-// Route to create a single product using productModel.create
-app.get('/create_products', async (req, res) => {
-    let data = await productModel.create({
-        name: "Samsung s6",
-        price: 5000,
-        description: "Galaxy Samsung S6",
-        category: "Mobile",
-    });
-    res.send(data);
-});
-
-// Route to insert a single product using productModel.insertOne
-app.get('/insert_products', async (req, res) => {
-    let data = await productModel.insertOne({
-        name: "Redmi",
-        price: 5000,
-        description: "Redmi 12c",
-        category: "Mobile",
-    });
-    res.send(data);
-});
-
-// Route to insert multiple products using productModel.insertMany
-app.get('/insert_multiple_products', async (req, res) => {
-    let data = await productModel.insertMany([
-        {
-            name: "Samsung s6",
-            price: 5000,
-            description: "Galaxy Samsung S6",
-            category: "Mobile",
-        },
-        {
-            name: "iPhone 13",
-            price: 50000,
-            description: "iPhone 13 pro non pta",
-            category: "Mobile",
-        },
-    ]);
-    res.send(data);
-});
-
-// Route to update a user's name using userModel.findOneAndUpdate
-app.get('/update_products', async (req, res) => {
-    const filter = { name: "iPhone 13" };
-    const update = {
-        price: 3000,
-        description: "iPhone 13 pro non pta"
-    };
-    // You should set the new option to true to return the document after update was applied.
-    let updatedProducts = await productModel.findByIdAndUpdate(filter, update, { new: true });
-
-    // Finds a matching document, replaces it with the provided doc, and returns the document.
-    // let updatedProducts = await productModel.findOneAndReplace(filter, update, { new: true });
-
-    res.send(updatedProducts);
-});
-
-// delete one
-app.get('/delete_products', async (req, res) => {
-    const deleteData = { name: "Samsung s6" };
-    let deleteProducts = await productModel.deleteOne(deleteData);
-
-    res.send(deleteProducts);
-});
-
-// delete multiple
-app.get('/delete_multiple_products', async (req, res) => {
-    const deleteData = { description: "iPhone 13 pro non pta" };
-    let deleteMultipleProducts = await productModel.deleteMany(deleteData);
-
-    res.send(deleteMultipleProducts);
-});
-
-
-// 🔥 This fetches ALL data
-app.get('/get_all_products', async (req, res) => {
+// ✅ Create a single product
+app.post('/products', async (req, res) => {
     try {
-        const allProducts = await productModel.find();
-        res.json(allProducts);
+        const product = await productModel.create(req.body);
+        res.status(201).json(product);
     } catch (error) {
-        res.status(500).send(error.message);
+        res.status(400).json({ error: error.message });
     }
 });
 
-
-
-// Start the Express server
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+// ✅ Insert a single product (same as above, different route if needed)
+app.post('/products/insert', async (req, res) => {
+    try {
+        const product = await productModel.create(req.body);
+        res.status(201).json(product);
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
 });
 
+// ✅ Insert multiple products
+app.post('/products/bulk-insert', async (req, res) => {
+    try {
+        const products = await productModel.insertMany(req.body);
+        res.status(201).json(products);
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+});
+
+// ✅ Update a product by ID
+app.put('/products/:id', async (req, res) => {
+    try {
+        const updatedProduct = await productModel.findByIdAndUpdate(
+            req.params.id,
+            req.body,
+            { new: true }
+        );
+        res.json(updatedProduct);
+        // res.json({ "status": "success" });
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+});
+
+// ✅ Delete a product by ID
+app.delete('/products/:id', async (req, res) => {
+    try {
+        await productModel.findByIdAndDelete(req.params.id);
+        res.json({ "status": "success" });
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+});
+
+// ✅ Delete multiple products by IDs (pass array of IDs in body)
+app.delete('/products', async (req, res) => {
+    try {
+        const { ids } = req.body;
+
+        if (!ids || !Array.isArray(ids) || ids.length === 0) {
+            return res.status(400).json({ error: "Please provide an array of product IDs" });
+        }
+
+        const result = await productModel.deleteMany({ _id: { $in: ids } });
+        res.json({
+            "status": "success",
+            "deletedCount": result.deletedCount,
+            "message": `Successfully deleted ${result.deletedCount} products`
+        });
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+});
+
+// ✅ Get all products
+app.get('/products', async (req, res) => {
+    try {
+        const products = await productModel.find();
+        res.json(products);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// ✅ Get a single product by ID
+app.get('/products/:id', async (req, res) => {
+    try {
+        const product = await productModel.findById(req.params.id);
+        res.json(product);
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+});
+
+// Start the server
+app.listen(PORT, () => {
+    console.log(`🚀 Server running at http://localhost:${PORT}`);
+});
