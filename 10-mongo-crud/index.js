@@ -12,6 +12,50 @@ app.use(express.json());
 // Connect to MongoDB
 connectDb();
 
+
+// ✅ Get all products
+app.get('/products', async (req, res) => {
+    try {
+        const products = await productModel.find();
+        res.json(products);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+
+// ✅ search by name api
+app.get('/products/search', async (req, res) => {
+    try {
+        const { name } = req.query;
+
+        // Optional: Return early if no name is provided
+        if (!name) {
+            return res.status(400).json({ error: 'Please provide a name to search' });
+        }
+
+        // Case-insensitive search
+        const products = await productModel.find({
+            name: { $regex: new RegExp(name, 'i') }
+        });
+
+        res.json(products);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// ✅ Get a single product by ID
+app.get('/products/:id', async (req, res) => {
+    try {
+        const product = await productModel.findById(req.params.id);
+        res.json(product);
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+});
+
+
 // ✅ Create a single product
 app.post('/products', async (req, res) => {
     try {
@@ -87,25 +131,6 @@ app.delete('/products', async (req, res) => {
     }
 });
 
-// ✅ Get all products
-app.get('/products', async (req, res) => {
-    try {
-        const products = await productModel.find();
-        res.json(products);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
-
-// ✅ Get a single product by ID
-app.get('/products/:id', async (req, res) => {
-    try {
-        const product = await productModel.findById(req.params.id);
-        res.json(product);
-    } catch (error) {
-        res.status(400).json({ error: error.message });
-    }
-});
 
 // Start the server
 app.listen(PORT, () => {
