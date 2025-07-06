@@ -6,5 +6,7 @@
 9-mongodb/node_modules/
 10-mongo-crud/node_modules/
 10-mongo-crud/.env
+11-file-upload/node_modules/
+11-file-upload/.env
 # Nodejs-BoilerPlate/node_modules/
 Nodejs-BoilerPlate/ 
