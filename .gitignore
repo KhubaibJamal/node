@@ -8,5 +8,7 @@
 10-mongo-crud/.env
 11-file-upload/node_modules/
 11-file-upload/.env
+12-mongo-atlas-connector/node_modules/
+12-mongo-atlas-connector/.env
 # Nodejs-BoilerPlate/node_modules/
 Nodejs-BoilerPlate/ 
