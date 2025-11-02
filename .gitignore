@@ -12,5 +12,6 @@
 12-mongo-atlas-connector/.env
 auth/node_modules/
 auth/.env
+typescript-test/node_modules/
 # Nodejs-BoilerPlate/node_modules/
 Nodejs-BoilerPlate/ 
